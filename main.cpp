@@ -19,8 +19,8 @@ int main() {
     double root = solver.solve(myFunction, initialGuess);
     
     std::cout << std::fixed << std::setprecision(7);
-    std::cout << "Корінь рівняння знайдено: " << root << std::endl;
-    std::cout << "Перевірка f = " << myFunction(root) << std::endl;
+    std::cout << "Function result: " << root << std::endl;
+    std::cout << "Check f(x) = " << myFunction(root) << std::endl;
 
 
     return 0;
