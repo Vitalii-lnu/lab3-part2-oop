@@ -1,6 +1,7 @@
 #include "NewtonSolver.h"
 #include <cmath>
 #include <iostream>
+#include <iomanip>
 
 NewtonSolver::NewtonSolver(double eps, double deltaX) 
     : epsilon(eps), dx(deltaX) {}
@@ -15,6 +16,8 @@ double NewtonSolver::derive(std::function<double(double)> f, double x) const {
 double NewtonSolver::solve(std::function<double(double)> f, double x0, int max_iterations) const {
     double x_n = x0;
 
+    std::cout << std::fixed << std::setprecision(9);
+
     for (int i = 0; i < max_iterations; ++i) {
         double fx = f(x_n);
         double dfx = derive(f, x_n);
@@ -27,17 +30,26 @@ double NewtonSolver::solve(std::function<double(double)> f, double x0, int max_i
         double x_next = x_n - fx / dfx;
 
         if (std::abs(fx) < epsilon) {
+            std::cout << "Iteration: " << i + 1 << std::endl;
+            std::cout << "Current x: " << x_n << "\n" << std::endl;
             std::cout << "Amount of iterations: " << i + 1 << std::endl;
+            
             return x_n;
         }
 
 
         if (std::abs(x_next - x_n) < epsilon) {
+            std::cout << "Iteration: " << i + 1 << std::endl;
+            std::cout << "Current x: " << x_next << "\n" << std::endl;
             std::cout << "Amount of iterations: " << i + 1 << std::endl;
+
             return x_next;
         }
 
+
         x_n = x_next;
+        std::cout << "Iteration: " << i + 1 << std::endl;
+        std::cout << "Current x: " << x_n << "\n" << std::endl;
     }
 
     std::cout << "Iteration limit was reached, could not be solved. " << std::endl;
