@@ -2,44 +2,54 @@
 #include <cmath>
 #include <iostream>
 
-NewtonSolver::NewtonSolver(double eps, double deltaX) 
-    : epsilon(eps), dx(deltaX) {}
 
-
-// 🔹 Центральна різницева схема — точніша ніж одностороння
 double NewtonSolver::derive(std::function<double(double)> f, double x) const {
-    return (f(x + dx) - f(x)) / dx;
+    return (f(x + dx) - f(x - dx)) / (2.0 * dx);
 }
 
-
 double NewtonSolver::solve(std::function<double(double)> f, double x0, int max_iterations) const {
-    double x_n = x0;
+    double x = x0;
+
+    std::cout << "Newton method iterations:\n";
+    std::cout << "----------------------------------------\n";
 
     for (int i = 0; i < max_iterations; ++i) {
-        double fx = f(x_n);
-        double dfx = derive(f, x_n);
+
+        double fx = f(x);
+        double dfx = derive(f, x);
+
+        double x_next;
 
         if (std::abs(dfx) < 1e-12) {
-            std::cout << "Derivative is almost zero. Newton's method could not be used. ";
-            exit(-1);
+            std::cout << "Step " << i + 1 << ": derivative too small -> stop\n";
+            return x;
         }
 
-        double x_next = x_n - fx / dfx;
+        x_next = x - fx / dfx;
+
+        std::cout << "Step " << i + 1
+                  << " | x = " << x
+                  << " | f(x) = " << fx
+                  << " | f'(x) = " << dfx
+                  << " | next x = " << x_next
+                  << std::endl;
 
         if (std::abs(fx) < epsilon) {
-            std::cout << "Amount of iterations: " << i + 1 << std::endl;
-            return x_n;
+            std::cout << "----------------------------------------\n";
+            std::cout << "Converged (|f(x)| < eps)\n";
+            return x;
         }
 
-
-        if (std::abs(x_next - x_n) < epsilon) {
-            std::cout << "Amount of iterations: " << i + 1 << std::endl;
+        if (std::abs(x_next - x) < epsilon) {
+            std::cout << "----------------------------------------\n";
+            std::cout << "Converged (|x_next - x| < eps)\n";
             return x_next;
         }
 
-        x_n = x_next;
+        x = x_next;
     }
 
-    std::cout << "Iteration limit was reached, could not be solved. " << std::endl;
-    exit(-1);
+    std::cout << "----------------------------------------\n";
+    std::cout << "Max iterations reached\n";
+    return x;
 }

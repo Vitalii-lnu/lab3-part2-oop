@@ -13,7 +13,11 @@ private:
     double derive(std::function<double(double)> f, double x) const;
 
 public:
-    NewtonSolver(double eps = 1e-7, double deltaX = 1e-8);
+    NewtonSolver(double eps = 1e-7, double deltaX = 1e-8)
+        : epsilon(eps), dx(deltaX)
+    {
+    
+    }
 
     // Основний метод пошуку кореня
     double solve(std::function<double(double)> f, double x0, int max_iterations = 1000) const;
