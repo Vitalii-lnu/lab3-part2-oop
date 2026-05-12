@@ -7,7 +7,7 @@ NewtonSolver::NewtonSolver(double eps, double deltaX)
     : epsilon(eps), dx(deltaX) {}
 
 
-// 🔹 Центральна різницева схема — точніша ніж одностороння
+// Центральна різницева схема — точніша ніж одностороння
 double NewtonSolver::derive(std::function<double(double)> f, double x) const {
     return (f(x + dx) - f(x)) / dx;
 }
